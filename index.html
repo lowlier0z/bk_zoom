@@ -7,6 +7,25 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.1/openseadragon.min.js"></script>
 
   <style>
+    #backBtn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 9999;
+  color: white;
+  font-family: sans-serif;
+  font-size: 14px;
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  user-select: none;
+  backdrop-filter: blur(6px);
+}
+
+#backBtn:hover {
+  background: rgba(255,255,255,0.1);
+}
     html, body, #viewer {
       margin: 0;
       width: 100%;
@@ -17,9 +36,17 @@
 </head>
 
 <body>
+<div id="backBtn">← Back</div>
 <div id="viewer"></div>
 
 <script>
+  document.getElementById("backBtn").onclick = () => {
+  if (document.referrer) {
+    window.history.back();
+  } else {
+    window.location.href = "https://YOUR-CARGO-SITE.com";
+  }
+};
   const params = new URLSearchParams(window.location.search);
 
   // CHANGE ONLY THIS: it reads whatever you pass in the URL
@@ -38,3 +65,5 @@
 
 </body>
 </html>
+
+

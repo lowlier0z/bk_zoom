@@ -2,19 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>detail</title>
+  <title>Zoom</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.1/openseadragon.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
-      padding: 0;
-      width: 100%;
       height: 100%;
-      background: white;
+      background: black;
       overflow: hidden;
-      font-family: sans-serif;
     }
 
     #viewer {
@@ -22,48 +19,57 @@
       height: 100%;
     }
 
-    /* Back button */
-    #backBtn {
+    /* ULTRA MINIMAL GLASS UI */
+    .ui {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      z-index: 9999;
-      color: white;
-      font-size: 14px;
-      padding: 8px 10px;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.25);
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-
-    #backBtn:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* Zoom controls */
-    #controls {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
       z-index: 9999;
       display: flex;
-      gap: 6px;
+      gap: 10px;
+
+      background: rgba(20,20,20,0.25);
+      backdrop-filter: blur(14px);
+
+      padding: 10px;
+      border-radius: 14px;
     }
 
-    #controls button {
+    /* Top-left back */
+    #back {
+      top: 16px;
+      left: 16px;
+    }
+
+    /* Bottom-right zoom */
+    #zoom {
+      bottom: 16px;
+      right: 16px;
+      flex-direction: column;
+    }
+
+    button {
+      all: unset;
+      cursor: pointer;
       width: 34px;
       height: 34px;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: rgba(0,0,0,0.4);
-      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: rgba(255,255,255,0.85);
       font-size: 18px;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
+
+      transition: 0.15s;
     }
 
-    #controls button:hover {
-      background: rgba(255,255,255,0.1);
+    button:hover {
+      color: white;
+      transform: scale(1.05);
+    }
+
+    /* SF Symbol fallback style */
+    .sf {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Icons", system-ui, sans-serif;
+      font-weight: 200;
     }
   </style>
 </head>
@@ -72,27 +78,25 @@
 
 <div id="viewer"></div>
 
-<div id="backBtn">← Back</div>
+<!-- Back -->
+<div id="back" class="ui">
+  <button id="backBtn" class="sf">←</button>
+</div>
 
-<div id="controls">
-  <button id="zoomIn">+</button>
-  <button id="zoomOut">−</button>
+<!-- Zoom -->
+<div id="zoom" class="ui">
+  <button id="zoomIn" class="sf">+</button>
+  <button id="zoomOut" class="sf">−</button>
 </div>
 
 <script>
-  // Read image from URL
   const params = new URLSearchParams(window.location.search);
   const img = params.get("img");
 
-  if (!img) {
-    document.body.innerHTML = "<div style='color:white;padding:20px;'>No image specified</div>";
-  }
-
-  // Create viewer
   const viewer = OpenSeadragon({
     id: "viewer",
-    prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.1/images/",
     tileSources: img,
+    prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.1/images/",
 
     showNavigationControl: false,
     showZoomControl: false,
@@ -100,23 +104,23 @@
     showFullPageControl: false
   });
 
-  // Back button
+  // back
   document.getElementById("backBtn").onclick = () => {
     if (document.referrer) {
-      window.history.back();
+      history.back();
     } else {
-      window.location.href = "http://cargo.site";
+      window.location.href = "https://cargo.site";
     }
   };
 
-  // Zoom controls
+  // zoom
   document.getElementById("zoomIn").onclick = () => {
-    viewer.viewport.zoomBy(1.2);
+    viewer.viewport.zoomBy(1.3);
     viewer.viewport.applyConstraints();
   };
 
   document.getElementById("zoomOut").onclick = () => {
-    viewer.viewport.zoomBy(0.8);
+    viewer.viewport.zoomBy(0.75);
     viewer.viewport.applyConstraints();
   };
 </script>

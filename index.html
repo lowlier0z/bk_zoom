@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Zoom</title>
+  <title>detail</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.1/openseadragon.min.js"></script>
 
@@ -10,66 +10,47 @@
     html, body {
       margin: 0;
       height: 100%;
-      background: black;
+      background: white; /* NEW: white museum background */
       overflow: hidden;
     }
 
+    /* Fade-in wrapper */
     #viewer {
       width: 100%;
       height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease; /* smooth fade */
     }
 
-    /* ULTRA MINIMAL GLASS UI */
-    .ui {
-      position: absolute;
-      z-index: 9999;
-      display: flex;
-      gap: 10px;
-
-      background: rgba(20,20,20,0.25);
-      backdrop-filter: blur(14px);
-
-      padding: 10px;
-      border-radius: 14px;
-    }
-
-    /* Top-left back */
+    /* Bottom-left back button */
     #back {
-      top: 16px;
-      left: 16px;
-    }
-
-    /* Bottom-right zoom */
-    #zoom {
+      position: absolute;
       bottom: 16px;
-      right: 16px;
-      flex-direction: column;
-    }
+      left: 16px;
+      z-index: 9999;
 
-    button {
-      all: unset;
-      cursor: pointer;
-      width: 34px;
-      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
 
-      color: rgba(255,255,255,0.85);
+      padding: 10px 12px;
+      border-radius: 12px;
+
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
+
+      color: rgba(0,0,0,0.75);
       font-size: 18px;
 
-      transition: 0.15s;
+      cursor: pointer;
+      user-select: none;
+
+      transition: all 0.2s ease;
     }
 
-    button:hover {
-      color: white;
-      transform: scale(1.05);
-    }
-
-    /* SF Symbol fallback style */
-    .sf {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Icons", system-ui, sans-serif;
-      font-weight: 200;
+    #back:hover {
+      background: rgba(255,255,255,0.9);
+      color: black;
     }
   </style>
 </head>
@@ -78,16 +59,7 @@
 
 <div id="viewer"></div>
 
-<!-- Back -->
-<div id="back" class="ui">
-  <button id="backBtn" class="sf">←</button>
-</div>
-
-<!-- Zoom -->
-<div id="zoom" class="ui">
-  <button id="zoomIn" class="sf">+</button>
-  <button id="zoomOut" class="sf">−</button>
-</div>
+<div id="back">←</div>
 
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -104,24 +76,18 @@
     showFullPageControl: false
   });
 
-  // back
-  document.getElementById("backBtn").onclick = () => {
+  // Fade in once image is ready
+  viewer.addHandler("open", () => {
+    document.getElementById("viewer").style.opacity = 1;
+  });
+
+  // Back button behavior
+  document.getElementById("back").onclick = () => {
     if (document.referrer) {
       history.back();
     } else {
-      window.location.href = "https://cargo.site";
+      window.location.href = "https://YOUR-CARGO-SITE.com";
     }
-  };
-
-  // zoom
-  document.getElementById("zoomIn").onclick = () => {
-    viewer.viewport.zoomBy(1.3);
-    viewer.viewport.applyConstraints();
-  };
-
-  document.getElementById("zoomOut").onclick = () => {
-    viewer.viewport.zoomBy(0.75);
-    viewer.viewport.applyConstraints();
   };
 </script>
 
